@@ -1,4 +1,4 @@
-(ns main.core
+(ns clojial.core
   (:import java.util.UUID))
 
 (defn run [_]
