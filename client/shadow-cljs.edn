@@ -13,4 +13,5 @@
  :builds
  {:frontend
   {:target :browser
-   :modules {:main {:init-fn app/main}}}}}
+   :modules {:main {:init-fn app/main}}
+   :compiler-options {:source-map true}}}}
