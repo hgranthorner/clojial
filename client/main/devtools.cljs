@@ -1,4 +1,4 @@
-(ns devtools
-  (:require [devtools.core :as devtools]))
+(ns devtools)
+  ;(:require [devtools.core :as devtools]))
 
-(devtools/install!)
+;(devtools/install!)

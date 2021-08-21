@@ -13,5 +13,11 @@
  :builds
  {:frontend
   {:target :browser
+   :devtools {:preloads [devtools.preload]}
    :modules {:main {:init-fn app/main}}
-   :compiler-options {:source-map true}}}}
+   :compiler-options {:source-map true}}
+  :deploy
+  {:target :browser
+   :modules {:main {:init-fn app/main}}
+   :release {:output-dir "resources/public/js"}
+   :optimizations :advanced}}}

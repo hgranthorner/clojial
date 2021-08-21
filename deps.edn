@@ -1,5 +1,6 @@
-{:paths ["server"]
+{:paths ["server" "resources"]
  :deps {ring/ring {:mvn/version "1.9.4"}
+        ring/ring-defaults {:mvn/version "0.3.3"}
         compojure/compojure {:mvn/version "1.6.2"}
         com.github.seancorfield/next.jdbc {:mvn/version "1.2.689"}
         org.xerial/sqlite-jdbc {:mvn/version "3.30.1"}

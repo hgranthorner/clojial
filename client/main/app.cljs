@@ -2,7 +2,6 @@
   (:require
    [clojure.pprint :as pp]
    [db]
-   [devtools]
    [routing]
    [re-frame.core :as rf]
    [reagent.dom :as d]))

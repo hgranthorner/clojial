@@ -1,11 +1,14 @@
 (ns clojial.core
   (:require
    [clojial.utils :as utils]
+   [clojure.string :refer [starts-with?]]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.reload :as r]
    [ring.middleware.stacktrace :as st]
+   [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+   [ring.util.response :as resp]
    [compojure.route :as route]
-   [compojure.core :as c]
+   [compojure.core :refer [defroutes GET]]
    [next.jdbc :as jdbc]
    [honey.sql :as sql]))
 
@@ -13,14 +16,27 @@
   (def some-uuid (utils/uuid))
   (println (str "Works! " some-uuid)))
 
-(c/defroutes main-routes
-  (c/GET "/" [] "Hello world7")
+(defroutes main-routes
+  (GET "/api/hello" [] "Hello world")
+  (GET "/api/egg" [] "egg")
+  (route/resources "/")
   (route/not-found "Not found"))
+
+(defn- wrap-static
+  [handler]
+  (fn [request]
+    (let [uri (:uri request)]
+     (handler
+      (if-not (or (starts-with? uri "/api/") (starts-with? uri "/static/"))
+        (assoc request :uri "/index.html")
+        request)))))
 
 (defn start-server
   []
   (run-jetty
-   (r/wrap-reload #'main-routes {:dirs ["server"]})
+   (-> (r/wrap-reload #'main-routes {:dirs ["server"]})
+       (wrap-defaults site-defaults)
+       wrap-static)
    {:port 3000
     :join? false}))
 
