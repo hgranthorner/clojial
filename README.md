@@ -10,3 +10,10 @@ You can run the server with
 $ clj -X clojial.core/run 
 ```
 
+And the front end with
+
+``` sh
+$ npm i
+$ npx shadow-cljs watch front-end
+```
+
