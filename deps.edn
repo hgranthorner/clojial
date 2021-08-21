@@ -1,4 +1,6 @@
 {:paths ["server"]
- :deps {com.github.seancorfield/next.jdbc {:mvn/version "1.2.689"}
+ :deps {ring/ring {:mvn/version "1.9.4"}
+        compojure/compojure {:mvn/version "1.6.2"}
+        com.github.seancorfield/next.jdbc {:mvn/version "1.2.689"}
         org.xerial/sqlite-jdbc {:mvn/version "3.30.1"}
         com.github.seancorfield/honeysql {:mvn/version "2.0.783"}}}
