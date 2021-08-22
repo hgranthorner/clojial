@@ -38,7 +38,8 @@
   (let [state @(rf/subscribe [:db])]
    [:div
     [:h1 "State"]
-    [:p {:style {:white-space "pre-wrap"}} (with-out-str (pp/pprint state))]]))
+    [:p {:style {:white-space "pre-wrap"}} (with-out-str (pp/pprint state))]
+    [:button {:on-click (fn [_] (rf/dispatch [:get-posts]))} "API"]]))
 
 (defn app
   []

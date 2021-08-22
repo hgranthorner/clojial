@@ -1,6 +1,8 @@
 (ns clojial.core
   (:require
+   [clojial.db :as db]
    [clojial.utils :as utils]
+   [clojure.data.json :as json]
    [clojure.string :refer [starts-with?]]
    [ring.adapter.jetty :refer [run-jetty]]
    [ring.middleware.reload :as r]
@@ -8,17 +10,26 @@
    [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
    [ring.util.response :as resp]
    [compojure.route :as route]
-   [compojure.core :refer [defroutes GET]]
-   [next.jdbc :as jdbc]
-   [honey.sql :as sql]))
-
+   [compojure.core :refer [defroutes GET]]))
+   
 (defn run [_]
   (def some-uuid (utils/uuid))
   (println (str "Works! " some-uuid)))
 
+(defn get-posts
+  []
+  (db/get-posts))
+
+(defn to-json
+  [x]
+  {:headers {"Content-type" "application/json"
+             "Access-Control-Allow-Origin" "*"}
+   :body (json/write-str x)})
+
 (defroutes main-routes
   (GET "/api/hello" [] "Hello world")
   (GET "/api/egg" [] "egg")
+  (GET "/api/posts" [] (to-json (get-posts)))
   (route/resources "/")
   (route/not-found "Not found"))
 
@@ -37,7 +48,7 @@
    (-> (r/wrap-reload #'main-routes {:dirs ["server"]})
        (wrap-defaults site-defaults)
        wrap-static)
-   {:port 3000
+   {:port 8081
     :join? false}))
 
 (comment
@@ -48,14 +59,5 @@
          (.stop server)
          (def server (start-server)))))
 
- (do
-   (def db-options {:dbtype "sqlite"
-                    :dbname "data.db"})
-   (def ds (jdbc/get-datasource db-options))
-   (def insert-q {:insert-into [:posts]
-                  :columns [:id :name :description]
-                  :values [[(utils/uuid) "First Post" "What this is all about"]]})
-   (jdbc/execute! ds (sql/format insert-q))
-   (def q {:select [:*]
-           :from [:posts]})
-   (def posts (jdbc/execute! ds (sql/format q)))))
+  (println "hello")
+  (comment))

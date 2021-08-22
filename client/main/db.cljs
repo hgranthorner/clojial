@@ -2,14 +2,15 @@
   (:require
    [utils]
    [clojure.string :as s]
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [day8.re-frame.http-fx]
+   [ajax.core :as ajax]))
             
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :initialize
  (fn [_ _]
-  {:posts [{:id (random-uuid) :name "First post" :description "What this is all about"}
-           {:id (random-uuid) :name "Second post" :description "Some content"}]}))
+  {:fx [[:dispatch [:get-posts]]]}))
 
 (rf/reg-event-db
  :add-post
@@ -26,6 +27,27 @@
          (if (some? route)
            (subs route 1)
            "")))))
+
+(rf/reg-event-fx
+ :get-posts
+ (fn [{:keys [db]} _]
+   {:http-xhrio {:method          :get
+                 :uri             "http://localhost:8081/api/posts"
+                 :timeout         8000                                           ;; optional see API docs
+                 :response-format (ajax/json-response-format {:keywords? true})  ;; IMPORTANT!: You must provide this.
+                 :on-success      [:get-posts-success]
+                 :on-failure      [:get-posts-failure]}}))
+
+(rf/reg-event-db
+ :get-posts-success
+ (fn [db [_ posts]]
+   (assoc db :posts posts)))
+
+(rf/reg-event-fx
+ :get-posts-failure
+ (fn [_ [_ x]]
+   (println x)))
+
 
 (rf/reg-sub
  :db
