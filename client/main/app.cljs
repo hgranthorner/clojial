@@ -19,7 +19,7 @@
 (defn post-card
   [post]
   [:div
-   [:a.header-link (get post :name)]
+   [:a.header-link {:href (str "#/posts/" (get post :id))} (get post :name)]
    [:h3 {:style {:margin-top 0}} (-> post :id str)]
    [:p (get post :description)]])
 
@@ -41,13 +41,19 @@
     [:p {:style {:white-space "pre-wrap"}} (with-out-str (pp/pprint state))]
     [:button {:on-click (fn [_] (rf/dispatch [:get-posts]))} "API"]]))
 
+(defn body
+  []
+  [:div
+   [intro]
+   [post-cards]
+   [show-state]])
+
 (defn app
   []
   [:div
    [header]
-   [intro]
-   [post-cards]
-   [show-state]])
+   [body]])
+   
 
 (defn ^:dev/after-load run-app
   []

@@ -59,6 +59,11 @@
  (fn [db _]
    (get db :posts)))
 
+(rf/reg-sub
+ :url
+ (fn [db _]
+   (get db :url)))
+
 (comment
   (let [url "http://localhost:8080/"
         route (-> url
